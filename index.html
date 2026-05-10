@@ -1,0 +1,1547 @@
+<!DOCTYPE html>
+<!-- saved from url=(0045)file:///C:/Users/veron/Downloads/index_1.html -->
+<html lang="cs"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Recepty</title>
+<link href="./index_files/css2" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'DM Sans',sans-serif;background:#FAFAF8;color:#1A1A18;min-height:100vh}
+input,select,textarea,button{font-family:'DM Sans',sans-serif}
+button{cursor:pointer}
+.serif{font-family:'DM Sans',sans-serif}
+
+header{background:#fff;border-bottom:1px solid #E8E6E0;padding:0 2rem;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100}
+.logo{display:flex;align-items:baseline;gap:6px;padding:1rem 0}
+.logo-main{font-family:'DM Sans',sans-serif;font-size:26px;font-weight:600;letter-spacing:-0.5px;color:#1A1A18}
+.logo-sub{font-family:'DM Sans',sans-serif;font-style:italic;font-size:14px;color:#8A8880}
+nav{display:flex;gap:4px}
+.nav-btn{background:transparent;color:#6A6860;border:none;border-radius:8px;padding:8px 16px;font-size:14px;font-weight:500;transition:all 0.15s}
+.nav-btn.active{background:#1A1A18;color:#fff}
+
+.page{display:none;max-width:1100px;margin:0 auto;padding:2rem 1.5rem}
+.page.active{display:block}
+
+.search-row{display:flex;gap:12px;margin-bottom:1.5rem}
+.search-input{flex:1;padding:12px 16px;border:1px solid #E0DED8;border-radius:10px;font-size:15px;background:#fff;outline:none}
+.btn-add{padding:12px 20px;background:#1A1A18;color:#fff;border:none;border-radius:10px;font-size:14px;font-weight:500;white-space:nowrap}
+.btn-primary{padding:12px 20px;background:#1A1A18;color:#fff;border:none;border-radius:10px;font-size:14px;font-weight:500}
+.btn-secondary{padding:8px 16px;background:transparent;border:1px solid #E0DED8;border-radius:8px;font-size:13px;color:#6A6860}
+
+.layout{display:flex;gap:2rem;align-items:flex-start}
+aside{width:200px;flex-shrink:0;background:#fff;border-radius:14px;border:1px solid #E8E6E0;padding:1.25rem;position:sticky;top:80px}
+.filter-section{margin-bottom:1.25rem}
+.filter-label{font-size:11px;font-weight:600;letter-spacing:0.08em;color:#8A8880;text-transform:uppercase;margin-bottom:10px}
+.filter-row{display:flex;align-items:center;gap:8px;margin-bottom:6px;cursor:pointer;font-size:14px;color:#6A6860}
+.filter-row input{accent-color:#1A1A18}
+.filter-ing{width:100%;padding:8px 10px;border:1px solid #E0DED8;border-radius:8px;font-size:13px;outline:none}
+.btn-reset{margin-top:1rem;width:100%;padding:8px;background:transparent;border:1px solid #E0DED8;border-radius:8px;font-size:13px;color:#6A6860}
+
+/* NOVINKY badge */
+.novinky-badge{display:inline-block;background:#FDE8D8;color:#8B4513;font-size:10px;font-weight:600;padding:2px 6px;border-radius:4px;letter-spacing:0.04em;vertical-align:middle;margin-left:4px}
+
+.count{font-size:13px;color:#8A8880;margin-bottom:1rem}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:16px}
+.card{background:#fff;border-radius:14px;border:1px solid #E8E6E0;overflow:hidden;cursor:pointer;transition:transform 0.15s,box-shadow 0.15s}
+.card:hover{transform:translateY(-3px);box-shadow:0 8px 24px rgba(0,0,0,0.08)}
+.card.nova{border-color:#F5C4A0}
+.card-img{height:160px;overflow:hidden;background:#F0EEE8}
+.card-img img{width:100%;height:100%;object-fit:cover}
+.card-img-placeholder{height:160px;background:#F5F3EE;display:flex;align-items:center;justify-content:center;font-size:48px}
+.card-body{padding:14px 16px}
+.tags{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px}
+.tag{font-size:11px;font-weight:500;padding:3px 8px;border-radius:6px}
+.card-name{font-size:15px;font-weight:500;line-height:1.3;margin-bottom:8px}
+.card-meta{display:flex;align-items:center;gap:12px;font-size:13px;color:#8A8880}
+.empty{grid-column:1/-1;text-align:center;padding:4rem;color:#8A8880}
+.empty-icon{font-size:48px;margin-bottom:1rem}
+
+/* MODAL */
+.overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:200;align-items:center;justify-content:center;padding:1rem}
+.overlay.open{display:flex}
+.modal{background:#fff;border-radius:18px;max-width:640px;width:100%;max-height:90vh;overflow-y:auto}
+.modal-img{height:240px;overflow:hidden;border-radius:18px 18px 0 0}
+.modal-img img{width:100%;height:100%;object-fit:cover}
+.modal-body{padding:1.5rem}
+.modal-title{font-family:'DM Sans',sans-serif;font-size:24px;font-weight:600;margin:8px 0;line-height:1.2}
+.modal-meta{display:flex;gap:16px;font-size:14px;color:#8A8880;margin-bottom:1rem}
+.modal-desc{font-size:15px;color:#4A4840;line-height:1.6;margin-bottom:1.25rem}
+.section-label{font-size:11px;font-weight:600;letter-spacing:0.08em;color:#8A8880;text-transform:uppercase;margin-bottom:10px}
+.ing-chips{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:1.25rem}
+.chip{font-size:13px;background:#F5F3EE;border-radius:6px;padding:4px 10px}
+.step{display:flex;gap:12px;margin-bottom:10px;align-items:flex-start}
+.step-num{width:24px;height:24px;background:#1A1A18;color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:600;flex-shrink:0}
+.step-text{font-size:14px;color:#4A4840;line-height:1.6;padding-top:2px}
+.modal-actions{display:flex;gap:10px;padding-top:1rem;border-top:1px solid #E8E6E0;margin-top:1.25rem}
+.modal-actions a,.modal-actions button{flex:1;padding:12px;text-align:center;border-radius:10px;font-size:14px;font-weight:500;text-decoration:none}
+.btn-outline{border:1px solid #E0DED8;background:#fff;color:#1A1A18}
+.btn-dark{background:#1A1A18;color:#fff;border:none}
+
+/* PLANNER */
+.planner-box{background:#fff;border-radius:14px;border:1px solid #E8E6E0;padding:1.5rem;margin-bottom:1.5rem}
+.planner-title{font-family:'DM Sans',sans-serif;font-size:20px;font-weight:600;margin-bottom:1rem}
+.planner-row{display:flex;gap:12px;flex-wrap:wrap;align-items:flex-end}
+.field-label{font-size:12px;color:#8A8880;margin-bottom:6px}
+.field-input{padding:10px 14px;border:1px solid #E0DED8;border-radius:10px;font-size:14px;outline:none;background:#fff}
+.navrhy-box{background:#FFF9F0;border:1px solid #F0E0C0;border-radius:14px;padding:1.5rem;margin-bottom:1.5rem}
+.navrhy-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem}
+.navrhy-row{display:flex;align-items:center;gap:12px;padding:8px 0;border-bottom:1px solid #EDE0C8}
+.navrhy-den{width:80px;font-size:14px;color:#8A8880;flex-shrink:0}
+.week-table{background:#fff;border-radius:14px;border:1px solid #E8E6E0;overflow:hidden;margin-bottom:1.5rem}
+.week-head{padding:1.25rem 1.5rem;border-bottom:1px solid #E8E6E0;display:flex;justify-content:space-between;align-items:center}
+.week-head-title{font-family:'DM Sans',sans-serif;font-size:18px;font-weight:600}
+.week-row{padding:1rem 1.5rem;border-bottom:1px solid #F0EEE8;display:flex;gap:1rem;align-items:center}
+.week-den{width:80px;font-size:14px;font-weight:500;flex-shrink:0}
+.week-items{flex:1;display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.week-tag{display:flex;align-items:center;gap:6px;font-size:13px;background:#F5F3EE;border-radius:8px;padding:4px 10px}
+.week-tag-remove{cursor:pointer;color:#B0A898;font-size:16px;line-height:1;border:none;background:none;padding:0}
+.btn-add-den{font-size:13px;padding:4px 10px;background:transparent;border:1px dashed #D0CEC8;border-radius:8px;color:#8A8880}
+.week-cell{padding:8px 12px;border-right:1px solid #F0EEE8;min-height:60px;vertical-align:top}
+.week-cell:last-child{border-right:none}
+.week-jidlo{font-size:13px;background:#F5F3EE;border-radius:6px;padding:5px 8px;margin-bottom:4px;display:flex;align-items:center;justify-content:space-between;gap:6px;cursor:pointer;transition:background 0.1s}
+.week-jidlo:hover{background:#EDE9E4}
+.week-jidlo-name{flex:1;line-height:1.3}
+.week-jidlo-remove{background:none;border:none;color:#C0B8B0;font-size:14px;padding:0;cursor:pointer;flex-shrink:0}
+.week-jidlo-remove:hover{color:#666}
+.week-pridat{font-size:12px;color:#B0A898;border:1px dashed #D8D4CE;border-radius:6px;padding:4px 8px;background:transparent;cursor:pointer;width:100%;text-align:left;margin-top:2px}
+.week-pridat:hover{color:#666;border-color:#999}
+.nakup-radek{display:flex;align-items:center;gap:12px;padding:10px 16px;border-bottom:1px solid #F5F3EE;transition:background 0.1s}
+.nakup-radek:hover{background:#FAFAF8}
+.nakup-radek.odkliknuto{opacity:0.4}
+.nakup-radek.odkliknuto .nakup-nazev{text-decoration:line-through}
+.nakup-check{width:18px;height:18px;accent-color:#1A1A18;cursor:pointer;flex-shrink:0}
+.nakup-nazev{flex:1;font-size:14px}
+.nakup-mnozstvi{font-size:13px;color:#8A8880;white-space:nowrap}
+.nakup-odebrat{background:none;border:none;color:#D0C8C0;font-size:16px;cursor:pointer;padding:0}
+.nakup-odebrat:hover{color:#666}
+
+/* PRIDAT FORM */
+.form-modal{max-width:560px}
+.form-group{margin-bottom:12px}
+.form-group .field-label{display:block;margin-bottom:4px}
+.form-group input,.form-group select,.form-group textarea{width:100%;padding:10px 14px;border:1px solid #E0DED8;border-radius:10px;font-size:14px;outline:none}
+.form-group textarea{resize:vertical}
+.sekce-chips{display:flex;flex-wrap:wrap;gap:8px}
+.sekce-chip{font-size:13px;padding:4px 10px;border:1px solid #E0DED8;border-radius:6px;background:#fff;color:#4A4840}
+.sekce-chip.active{background:#1A1A18;color:#fff;border-color:#1A1A18}
+.form-row{display:flex;gap:12px}
+.form-row .form-group{flex:1}
+
+/* SNEZ LEDNICI */
+.lednice-hero{background:#fff;border-radius:14px;border:1px solid #E8E6E0;padding:2rem;margin-bottom:1.5rem;text-align:center}
+.lednice-title{font-family:'DM Sans',sans-serif;font-size:24px;font-weight:600;margin-bottom:8px}
+.lednice-sub{font-size:15px;color:#6A6860;margin-bottom:1.5rem}
+.lednice-input-row{display:flex;gap:12px;max-width:600px;margin:0 auto}
+.lednice-input{flex:1;padding:14px 18px;border:1px solid #E0DED8;border-radius:12px;font-size:15px;outline:none;background:#fff}
+.lednice-input:focus{border-color:#1A1A18}
+.lednice-result-label{font-size:13px;color:#8A8880;margin-bottom:1rem}
+.match-badge{display:inline-block;background:#D8F5E8;color:#1A7A4A;font-size:11px;font-weight:600;padding:3px 8px;border-radius:6px;margin-left:6px}
+
+/* NASTAVENI */
+.settings-box{background:#fff;border-radius:14px;border:1px solid #E8E6E0;padding:1.5rem;margin-bottom:1.5rem}
+.settings-title{font-family:'DM Sans',sans-serif;font-size:20px;font-weight:600;margin-bottom:6px}
+.settings-sub{font-size:14px;color:#6A6860;margin-bottom:1.25rem}
+.pantry-tags{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:1rem}
+.pantry-tag{display:flex;align-items:center;gap:6px;font-size:13px;background:#F5F3EE;border-radius:8px;padding:5px 10px}
+.pantry-remove{background:none;border:none;color:#B0A898;font-size:15px;line-height:1;padding:0;cursor:pointer}
+.pantry-add-row{display:flex;gap:8px}
+.pantry-add-input{flex:1;padding:9px 12px;border:1px solid #E0DED8;border-radius:8px;font-size:14px;outline:none}
+.pantry-add-btn{padding:9px 16px;background:#1A1A18;color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:500}
+.settings-divider{border:none;border-top:1px solid #F0EEE8;margin:1.5rem 0}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">
+    <span class="logo-main">Recepty</span>
+    <span class="logo-sub">vaří s tebou</span>
+  </div>
+  <nav>
+    <button class="nav-btn active" onclick="showPage(&#39;recepty&#39;,this)">Recepty</button>
+    <button class="nav-btn" onclick="showPage(&#39;lednice&#39;,this)">Sněz lednici</button>
+    <button class="nav-btn" onclick="showPage(&#39;planner&#39;,this)">Jídelníček</button>
+    <button class="nav-btn" onclick="otevriNakup(this)">🛒 Nákup</button>
+    <button class="nav-btn" onclick="showPage(&#39;nastaveni&#39;,this)">Nastavení</button>
+  </nav>
+</header>
+
+<!-- RECEPTY PAGE -->
+<div id="page-recepty" class="page active">
+  <div class="search-row">
+    <input class="search-input" id="searchInput" placeholder="Hledej recept nebo ingredienci..." oninput="renderGrid()">
+    <button class="btn-add" onclick="openPridat()">+ Přidat recept</button>
+  </div>
+  <div class="layout">
+    <aside>
+      <div class="filter-section">
+        <div class="filter-label">Sekce</div>
+        <div id="filtrSekce"><label class="filter-row"><input type="checkbox" value="snidane" onchange="toggleSekce(&#39;snidane&#39;)"> Snídaně</label><label class="filter-row"><input type="checkbox" value="obedy" onchange="toggleSekce(&#39;obedy&#39;)"> Obědy</label><label class="filter-row"><input type="checkbox" value="vecere" onchange="toggleSekce(&#39;vecere&#39;)"> Večeře</label><label class="filter-row"><input type="checkbox" value="svacinky" onchange="toggleSekce(&#39;svacinky&#39;)"> Svačinky</label><label class="filter-row"><input type="checkbox" value="dezerty" onchange="toggleSekce(&#39;dezerty&#39;)"> Dezerty</label><label class="filter-row"><input type="checkbox" value="salaty" onchange="toggleSekce(&#39;salaty&#39;)"> Saláty</label><label class="filter-row"><input type="checkbox" value="polevky" onchange="toggleSekce(&#39;polevky&#39;)"> Polévky</label><label class="filter-row"><input type="checkbox" value="napoje" onchange="toggleSekce(&#39;napoje&#39;)"> Nápoje</label></div>
+      </div>
+      <div class="filter-section">
+        <div class="filter-label">Novinky</div>
+        <label class="filter-row"><input type="checkbox" id="filtrNovinky" onchange="renderGrid()"> Přidané dnes</label>
+      </div>
+      <div class="filter-section">
+        <div class="filter-label">Chuť</div>
+        <label class="filter-row"><input type="radio" name="chut" value="" checked="" onchange="renderGrid()"> Vše</label>
+        <label class="filter-row"><input type="radio" name="chut" value="sladka" onchange="renderGrid()"> Sladká</label>
+        <label class="filter-row"><input type="radio" name="chut" value="slana" onchange="renderGrid()"> Slaná</label>
+      </div>
+      <div class="filter-section">
+        <div class="filter-label">Doba přípravy</div>
+        <label class="filter-row"><input type="radio" name="doba" value="" checked="" onchange="renderGrid()"> Vše</label>
+        <label class="filter-row"><input type="radio" name="doba" value="15" onchange="renderGrid()"> do 15 min</label>
+        <label class="filter-row"><input type="radio" name="doba" value="30" onchange="renderGrid()"> do 30 min</label>
+        <label class="filter-row"><input type="radio" name="doba" value="60" onchange="renderGrid()"> do 60 min</label>
+        <label class="filter-row"><input type="radio" name="doba" value="9999" data-min="60" onchange="renderGrid()"> 60+ min</label>
+      </div>
+      <div class="filter-section">
+        <div class="filter-label">Ingredience</div>
+        <input class="filter-ing" id="filtrIng" placeholder="avokádo, vejce..." oninput="renderGrid()">
+      </div>
+      <button class="btn-reset" onclick="resetFiltry()">Zrušit filtry</button>
+    </aside>
+    <div style="flex:1">
+      <div class="count" id="countLabel">12 receptů</div>
+      <div class="grid" id="recipeGrid">
+    <div class="card" onclick="openDetail(1)">
+      <div class="card-img"><img src="./index_files/8753af7a-52ef-41aa-8f41-17cbeefcba93" alt="Vaječný sendvič se slaninou" onerror="this.parentElement.style.display=&#39;none&#39;"></div>
+      <div class="card-body">
+        <div class="tags">
+          <span class="tag" style="background:#FDE8D8;color:#8B4513">Snídaně</span>
+          
+          
+          
+        </div>
+        <div class="card-name">Vaječný sendvič se slaninou</div>
+        <div class="card-meta"><span>⏱ 10 min</span><span>🧂 slaná</span></div>
+      </div>
+    </div>
+    <div class="card" onclick="openDetail(2)">
+      <div class="card-img-placeholder">🍽️</div>
+      <div class="card-body">
+        <div class="tags">
+          <span class="tag" style="background:#D8EFD8;color:#2D6A2D">Obědy</span><span class="tag" style="background:#D8F5E8;color:#1A7A4A">Saláty</span>
+          
+          
+          
+        </div>
+        <div class="card-name">Zeleninový salát s vajíčkem</div>
+        <div class="card-meta"><span>⏱ 15 min</span><span>🧂 slaná</span></div>
+      </div>
+    </div>
+    <div class="card" onclick="openDetail(3)">
+      <div class="card-img-placeholder">🍽️</div>
+      <div class="card-body">
+        <div class="tags">
+          <span class="tag" style="background:#FDE8D8;color:#8B4513">Snídaně</span><span class="tag" style="background:#F5E8D8;color:#7A4A1A">Svačinky</span>
+          
+          
+          
+        </div>
+        <div class="card-name">Cottage placky naslano i nasladko</div>
+        <div class="card-meta"><span>⏱ 25 min</span><span>🍯 sladká</span></div>
+      </div>
+    </div>
+    <div class="card" onclick="openDetail(4)">
+      <div class="card-img-placeholder">🍽️</div>
+      <div class="card-body">
+        <div class="tags">
+          <span class="tag" style="background:#D8EFD8;color:#2D6A2D">Obědy</span><span class="tag" style="background:#D8E8F5;color:#1A4A7A">Večeře</span>
+          
+          
+          
+        </div>
+        <div class="card-name">Bowl s divokým lososem a zeleninou</div>
+        <div class="card-meta"><span>⏱ 10 min</span><span>🧂 slaná</span></div>
+      </div>
+    </div>
+    <div class="card" onclick="openDetail(5)">
+      <div class="card-img-placeholder">🍽️</div>
+      <div class="card-body">
+        <div class="tags">
+          <span class="tag" style="background:#FDE8D8;color:#8B4513">Snídaně</span>
+          
+          
+          
+        </div>
+        <div class="card-name">Avokádový toast s vejci</div>
+        <div class="card-meta"><span>⏱ 10 min</span><span>🧂 slaná</span></div>
+      </div>
+    </div>
+    <div class="card" onclick="openDetail(6)">
+      <div class="card-img-placeholder">🍽️</div>
+      <div class="card-body">
+        <div class="tags">
+          <span class="tag" style="background:#FDE8D8;color:#8B4513">Snídaně</span>
+          
+          
+          
+        </div>
+        <div class="card-name">Proteinové ovesné kaše s borůvkami</div>
+        <div class="card-meta"><span>⏱ 10 min</span><span>🍯 sladká</span></div>
+      </div>
+    </div>
+    <div class="card" onclick="openDetail(7)">
+      <div class="card-img-placeholder">🍽️</div>
+      <div class="card-body">
+        <div class="tags">
+          <span class="tag" style="background:#D8EFD8;color:#2D6A2D">Obědy</span><span class="tag" style="background:#F5E8D8;color:#7A4A1A">Svačinky</span>
+          
+          
+          
+        </div>
+        <div class="card-name">Kuřecí wrap s avokádem</div>
+        <div class="card-meta"><span>⏱ 20 min</span><span>🧂 slaná</span></div>
+      </div>
+    </div>
+    <div class="card" onclick="openDetail(8)">
+      <div class="card-img-placeholder">🍽️</div>
+      <div class="card-body">
+        <div class="tags">
+          <span class="tag" style="background:#F5D8E8;color:#7A1A4A">Dezerty</span><span class="tag" style="background:#F5E8D8;color:#7A4A1A">Svačinky</span>
+          
+          
+          
+        </div>
+        <div class="card-name">Čokoládové proteinové brownies</div>
+        <div class="card-meta"><span>⏱ 35 min</span><span>🍯 sladká</span></div>
+      </div>
+    </div>
+    <div class="card" onclick="openDetail(9)">
+      <div class="card-img-placeholder">🍽️</div>
+      <div class="card-body">
+        <div class="tags">
+          <span class="tag" style="background:#D8E8F5;color:#1A4A7A">Večeře</span>
+          
+          
+          
+        </div>
+        <div class="card-name">Losos s batáty a brokolicí</div>
+        <div class="card-meta"><span>⏱ 35 min</span><span>🧂 slaná</span></div>
+      </div>
+    </div>
+    <div class="card" onclick="openDetail(10)">
+      <div class="card-img-placeholder">🍽️</div>
+      <div class="card-body">
+        <div class="tags">
+          <span class="tag" style="background:#FDE8D8;color:#8B4513">Snídaně</span><span class="tag" style="background:#F5E8D8;color:#7A4A1A">Svačinky</span>
+          
+          
+          
+        </div>
+        <div class="card-name">Řecký jogurt s granolou a ovocem</div>
+        <div class="card-meta"><span>⏱ 5 min</span><span>🍯 sladká</span></div>
+      </div>
+    </div>
+    <div class="card" onclick="openDetail(11)">
+      <div class="card-img-placeholder">🍽️</div>
+      <div class="card-body">
+        <div class="tags">
+          <span class="tag" style="background:#E8D8F5;color:#4A1A7A">Polévky</span><span class="tag" style="background:#D8EFD8;color:#2D6A2D">Obědy</span>
+          
+          
+          
+        </div>
+        <div class="card-name">Kuřecí polévka s nudlemi</div>
+        <div class="card-meta"><span>⏱ 45 min</span><span>🧂 slaná</span></div>
+      </div>
+    </div>
+    <div class="card" onclick="openDetail(12)">
+      <div class="card-img-placeholder">🍽️</div>
+      <div class="card-body">
+        <div class="tags">
+          <span class="tag" style="background:#F5F5D8;color:#6A6A1A">Nápoje</span><span class="tag" style="background:#F5E8D8;color:#7A4A1A">Svačinky</span>
+          
+          
+          
+        </div>
+        <div class="card-name">Arašídové smoothie s banánem</div>
+        <div class="card-meta"><span>⏱ 5 min</span><span>🍯 sladká</span></div>
+      </div>
+    </div></div>
+    </div>
+  </div>
+</div>
+
+<!-- SNĚZ LEDNICI PAGE -->
+<div id="page-lednice" class="page">
+  <div class="lednice-hero">
+    <div class="lednice-title">🥬 Sněz lednici</div>
+    <div class="lednice-sub">Napiš, co máš doma a chceš spotřebovat — najdeme recepty, kde to použiješ.</div>
+    <div class="lednice-input-row">
+      <input class="lednice-input" id="lednicaInput" placeholder="např. kuřecí prsa, brokolice, vejce..." oninput="hledejVLednici()">
+      <button class="btn-primary" onclick="hledejVLednici()">Hledat</button>
+    </div>
+  </div>
+  <div id="lednicaResult" style="display:none">
+    <div class="lednice-result-label" id="lednicaLabel"></div>
+    <div id="lednicaGrid"></div>
+  </div>
+  <div id="lednicaEmpty" style="display:none;text-align:center;padding:3rem;color:#8A8880">
+    <div style="font-size:48px;margin-bottom:1rem">🤷</div>
+    <div style="font-size:16px">Žádné recepty s těmito surovinami.</div>
+    <div style="font-size:14px;margin-top:8px">Zkus jiné ingredience nebo <a href="file:///C:/Users/veron/Downloads/index_1.html#" onclick="showPage(&#39;recepty&#39;,document.querySelectorAll(&#39;.nav-btn&#39;)[0])" style="color:#1A1A18">procházej všechny recepty</a>.</div>
+  </div>
+</div>
+
+<!-- PLANNER PAGE -->
+<div id="page-planner" class="page">
+
+  <!-- Generátor -->
+  <div class="planner-box">
+    <div class="planner-title">Navrhnout jídelníček</div>
+    <div style="font-size:14px;color:#6A6860;margin-bottom:1rem">Napiš suroviny které chceš tento týden použít — každou zařadím aspoň do jednoho jídla. Každý den bude jiné jídlo.</div>
+    <div class="planner-row">
+      <div style="flex:2">
+        <div class="field-label">Suroviny které chci využít</div>
+        <input class="field-input" id="plannerIng" placeholder="kuřecí prsa, brokolice, avokádo, vejce..." style="width:100%">
+      </div>
+      <div>
+        <div class="field-label">Max. čas přípravy</div>
+        <select class="field-input" id="plannerDoba">
+          <option value="15">do 15 min</option>
+          <option value="30" selected="">do 30 min</option>
+          <option value="60">do 60 min</option>
+          <option value="9999">bez limitu</option>
+        </select>
+      </div>
+      <button class="btn-primary" onclick="generujNavrhy()">Navrhnout</button>
+    </div>
+  </div>
+
+  <!-- Návrhy ke schválení -->
+  <div class="navrhy-box" id="navrhyBox" style="display:none">
+    <div class="navrhy-head">
+      <div>
+        <div style="font-weight:500;margin-bottom:4px">Navrhovaný jídelníček</div>
+        <div id="navrhyPokrytiLabel" style="font-size:13px;color:#6A6860"></div>
+      </div>
+      <div style="display:flex;gap:8px">
+        <button class="btn-secondary" onclick="generujNavrhy()">Znovu</button>
+        <button class="btn-primary" style="padding:8px 16px;font-size:13px" onclick="schvalNavrhy()">Schválit ✓</button>
+      </div>
+    </div>
+    <div id="navrhyList"></div>
+  </div>
+
+  <!-- Týdenní tabulka -->
+  <div class="week-table">
+    <div class="week-head">
+      <div class="week-head-title">Týdenní plán</div>
+      <div style="display:flex;gap:8px">
+        <button class="btn-secondary" onclick="tiskniJidelnicek()">🖨 Tisknout / stáhnout</button>
+        <button class="btn-primary" style="padding:8px 16px;font-size:13px" onclick="otevriNakup(null)">🛒 Nákupní seznam</button>
+      </div>
+    </div>
+    <!-- hlavička sloupců -->
+    <div style="display:grid;grid-template-columns:90px repeat(4,1fr);background:#F5F3EE;border-bottom:1px solid #E8E6E0">
+      <div style="padding:8px 12px;font-size:11px;font-weight:600;color:#8A8880;text-transform:uppercase"></div>
+      <div style="padding:8px 12px;font-size:11px;font-weight:600;color:#8B4513;text-transform:uppercase">Snídaně</div>
+      <div style="padding:8px 12px;font-size:11px;font-weight:600;color:#2D6A2D;text-transform:uppercase">Oběd</div>
+      <div style="padding:8px 12px;font-size:11px;font-weight:600;color:#7A4A1A;text-transform:uppercase">Svačina</div>
+      <div style="padding:8px 12px;font-size:11px;font-weight:600;color:#1A4A7A;text-transform:uppercase">Večeře</div>
+    </div>
+    <div id="weekGrid"></div>
+  </div>
+</div>
+
+<!-- NÁKUPNÍ SEZNAM PAGE (samostatná sekce, ne modal) -->
+<div id="page-nakup" class="page">
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1.5rem">
+    <div>
+      <div style="font-family:&#39;DM Sans&#39;,sans-serif;font-size:26px;font-weight:600">🛒 Nákupní seznam</div>
+      <div style="font-size:14px;color:#8A8880;margin-top:4px" id="nakupPocet"></div>
+    </div>
+    <div style="display:flex;gap:8px">
+      <button class="btn-secondary" onclick="zrusitOdklikane()">Zrušit odklikané</button>
+      <button class="btn-secondary" onclick="showPage(&#39;planner&#39;,document.querySelectorAll(&#39;.nav-btn&#39;)[2])">← Jídelníček</button>
+    </div>
+  </div>
+
+  <div style="display:flex;gap:1.5rem;align-items:flex-start">
+    <!-- Seznam -->
+    <div style="flex:1;background:#fff;border-radius:14px;border:1px solid #E8E6E0;overflow:hidden">
+      <div id="nakupInfo" style="font-size:13px;color:#2D6A2D;padding:12px 16px;background:#D8F5E8;border-bottom:1px solid #C0E8CC;display:none"></div>
+      <div id="nakupList" style="padding:0.5rem 0"></div>
+      <!-- Přidat ručně -->
+      <div style="padding:12px 16px;border-top:1px solid #F0EEE8;display:flex;gap:8px">
+        <input id="nakupPridatInput" placeholder="Přidat položku ručně..." style="flex:1;padding:9px 12px;border:1px solid #E0DED8;border-radius:8px;font-size:14px;outline:none;font-family:inherit" onkeydown="if(event.key===&#39;Enter&#39;)pridatDoNakupu()">
+        <button onclick="pridatDoNakupu()" style="padding:9px 16px;background:#1A1A18;color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:500;font-family:inherit">Přidat</button>
+      </div>
+    </div>
+    <!-- Tip -->
+    <div style="width:240px;background:#FFF9F0;border:1px solid #F0E0C0;border-radius:14px;padding:1.25rem">
+      <div style="font-size:13px;font-weight:500;margin-bottom:8px">💡 Akce v obchodech</div>
+      <div style="font-size:13px;color:#6A6860;line-height:1.6">Zkontroluj letáky Lidl, Kaufland a Billa pro aktuální akce na tvoje potraviny.</div>
+      <div style="margin-top:1rem;display:flex;flex-direction:column;gap:6px">
+        <a href="https://www.lidl.cz/cs/letaky.htm" target="_blank" style="font-size:13px;color:#1A1A18;text-decoration:none;padding:6px 10px;border:1px solid #E0DED8;border-radius:6px;display:block;text-align:center">Lidl letáky ↗</a>
+        <a href="https://www.kaufland.cz/akce/aktualni-letaky.html" target="_blank" style="font-size:13px;color:#1A1A18;text-decoration:none;padding:6px 10px;border:1px solid #E0DED8;border-radius:6px;display:block;text-align:center">Kaufland letáky ↗</a>
+        <a href="https://www.billa.cz/akcni-zbozi" target="_blank" style="font-size:13px;color:#1A1A18;text-decoration:none;padding:6px 10px;border:1px solid #E0DED8;border-radius:6px;display:block;text-align:center">Billa akce ↗</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- NASTAVENÍ PAGE -->
+<div id="page-nastaveni" class="page">
+  <div class="settings-box" style="margin-bottom:1.5rem">
+    <div class="settings-title">Pro kolik osob vařím</div>
+    <div class="settings-sub">Nákupní seznam automaticky upraví množství podle počtu porcí.</div>
+    <div style="display:flex;gap:8px;align-items:center">
+      <button onclick="setPocetOsob(1)" id="po1" class="pocet-btn" style="padding:8px 18px;border-radius:8px;border:1px solid #E0DED8;font-size:14px;font-family:inherit;cursor:pointer;background:#fff">1</button>
+      <button onclick="setPocetOsob(2)" id="po2" class="pocet-btn" style="padding:8px 18px;border-radius:8px;border:1px solid #1A1A18;font-size:14px;font-family:inherit;cursor:pointer;background:#1A1A18;color:#fff">2</button>
+      <button onclick="setPocetOsob(3)" id="po3" class="pocet-btn" style="padding:8px 18px;border-radius:8px;border:1px solid #E0DED8;font-size:14px;font-family:inherit;cursor:pointer;background:#fff">3</button>
+      <button onclick="setPocetOsob(4)" id="po4" class="pocet-btn" style="padding:8px 18px;border-radius:8px;border:1px solid #E0DED8;font-size:14px;font-family:inherit;cursor:pointer;background:#fff">4</button>
+      <button onclick="setPocetOsob(5)" id="po5" class="pocet-btn" style="padding:8px 18px;border-radius:8px;border:1px solid #E0DED8;font-size:14px;font-family:inherit;cursor:pointer;background:#fff">5+</button>
+    </div>
+  </div>
+    <div class="settings-title">Spíž — co mám vždy doma</div>
+    <div class="settings-sub">Tyto potraviny se nebudou přidávat do nákupního seznamu, protože je považuješ za základ, který máš vždy k dispozici.</div>
+    <div class="pantry-tags" id="pantryTags"></div>
+    <div class="pantry-add-row">
+      <input class="pantry-add-input" id="pantryInput" placeholder="přidat potravinu..." onkeydown="if(event.key===&#39;Enter&#39;)pridejDoSpize()">
+      <button class="pantry-add-btn" onclick="pridejDoSpize()">Přidat</button>
+    </div>
+    <hr class="settings-divider">
+    <div style="font-size:13px;color:#8A8880">Příklady: olivový olej, sůl, pepř, česnek, cibule, ocet, mouka, máslo, vejce...</div>
+  </div>
+
+
+<!-- MODAL: ruční přidání jídla do jídelníčku -->
+<div class="overlay" id="pridatJidloOverlay" onclick="if(event.target===this)this.classList.remove(&#39;open&#39;)">
+  <div class="modal form-modal" style="padding:1.5rem;max-width:460px">
+    <h2 class="serif" style="font-size:20px;font-weight:600;margin-bottom:1.25rem">Přidat jídlo</h2>
+    <div style="font-size:13px;color:#8A8880;margin-bottom:1rem" id="pridatJidloSlot"></div>
+    <div class="form-group">
+      <label class="field-label">Název jídla *</label>
+      <input id="pjNazev" placeholder="Co budeš vařit?">
+    </div>
+    <div class="form-group">
+      <label class="field-label">Počet porcí</label>
+      <div style="display:flex;align-items:center;gap:10px">
+        <button onclick="zmenPjPorce(-1)" style="width:32px;height:32px;border:1px solid #E0DED8;border-radius:6px;background:#fff;font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center">−</button>
+        <span id="pjPorceVal" style="font-size:16px;font-weight:500;min-width:24px;text-align:center">2</span>
+        <button onclick="zmenPjPorce(1)" style="width:32px;height:32px;border:1px solid #E0DED8;border-radius:6px;background:#fff;font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center">+</button>
+        <span style="font-size:13px;color:#8A8880">porce</span>
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="field-label">Nákupní seznam (každá položka na řádek)</label>
+      <textarea id="pjNakup" rows="4" placeholder="2 kuřecí prsa
+1 brokolice
+3 lžíce olivového oleje"></textarea>
+    </div>
+    <div style="display:flex;gap:8px;margin-top:1.25rem">
+      <button class="btn-outline" style="flex:1;padding:10px;border-radius:10px" onclick="document.getElementById(&#39;pridatJidloOverlay&#39;).classList.remove(&#39;open&#39;)">Zrušit</button>
+      <button class="btn-dark" style="flex:1;padding:10px;border-radius:10px" onclick="ulozRucniJidlo()">Přidat</button>
+    </div>
+  </div>
+</div>
+
+
+<div class="overlay" id="detailOverlay" onclick="closeDetail(event)">
+  <div class="modal" id="detailModal"></div>
+</div>
+
+<!-- PŘIDAT MODAL -->
+<div class="overlay" id="pridatOverlay" onclick="closePridat(event)">
+  <div class="modal form-modal" style="padding:1.5rem">
+    <h2 class="serif" style="font-size:22px;font-weight:600;margin-bottom:1.25rem">Přidat vlastní recept</h2>
+    <div class="form-group">
+      <label class="field-label">Název *</label>
+      <input id="fName" placeholder="Název receptu">
+    </div>
+    <div class="form-group">
+      <label class="field-label">Sekce</label>
+      <div class="sekce-chips" id="fSekceChips"></div>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label class="field-label">Chuť</label>
+        <select id="fChut"><option value="slana">Slaná</option><option value="sladka">Sladká</option></select>
+      </div>
+      <div class="form-group">
+        <label class="field-label">Doba přípravy (min)</label>
+        <input id="fDoba" type="number" value="30" min="1">
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="field-label">Popis</label>
+      <textarea id="fPopis" rows="2" placeholder="Krátký popis receptu..."></textarea>
+    </div>
+    <div class="form-group">
+      <label class="field-label">Ingredience (oddělené čárkou)</label>
+      <input id="fIng" placeholder="avokádo, vejce, chléb">
+    </div>
+    <div class="form-group">
+      <label class="field-label">Postup (každý krok na nový řádek)</label>
+      <textarea id="fPostup" rows="3" placeholder="Rozehřej pánev...
+Přidej vejce...
+Podávej teplé."></textarea>
+    </div>
+    <div class="form-group">
+      <label class="field-label">Nákupní seznam (každá položka na řádek)</label>
+      <textarea id="fNakup" rows="3" placeholder="2 vejce
+1 avokádo
+celozrnný chléb"></textarea>
+    </div>
+    <div style="display:flex;gap:10px;margin-top:1.25rem">
+      <button class="btn-outline" style="flex:1;padding:12px;border-radius:10px" onclick="closePridatBtn()">Zrušit</button>
+      <button class="btn-dark" style="flex:1;padding:12px;border-radius:10px" onclick="pridejRecept()">Přidat recept</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const SEKCE_LABELS = {snidane:"Snídaně",obedy:"Obědy",vecere:"Večeře",svacinky:"Svačinky",dezerty:"Dezerty",salaty:"Saláty",polevky:"Polévky",napoje:"Nápoje"};
+const PASTEL = {snidane:"#FDE8D8",obedy:"#D8EFD8",vecere:"#D8E8F5",svacinky:"#F5E8D8",dezerty:"#F5D8E8",salaty:"#D8F5E8",polevky:"#E8D8F5",napoje:"#F5F5D8"};
+const TEXTC = {snidane:"#8B4513",obedy:"#2D6A2D",vecere:"#1A4A7A",svacinky:"#7A4A1A",dezerty:"#7A1A4A",salaty:"#1A7A4A",polevky:"#4A1A7A",napoje:"#6A6A1A"};
+
+const dnesStart = new Date(); dnesStart.setHours(0,0,0,0);
+
+let recepty = [
+  {id:1,name:"Vaječný sendvič se slaninou",sekce:["snidane"],chut:"slana",doba:10,ingredience:["vejce","slanina","sýr eidam","cibule","paprika","máslo","sůl","pepř","chléb","rajče"],foto:"https://cdn.vilgain.com/image/recipe-cover/cover-desktop/8753af7a-52ef-41aa-8f41-17cbeefcba93?v=1739732388",url:"https://aktin.cz/vajecny-sendvic-se-slaninou",popis:"Rychlá snídaně nebo večeře z jedné pánve – s omeletou, slaninou a sýrem.",porce:1,postup:["Rozehřej pánev a opeč slaninu.","Vmíchej vejce a udělej omeletu.","Posyp sýrem, přidej zeleninu a přelož jako sendvič."],nakup:["2 vejce","3 plátky slanina","30 g sýr","½ cibule","½ paprika"],zdroj:"aktin.cz",pridano:null},
+  {id:2,name:"Zeleninový salát s vajíčkem",sekce:["obedy","salaty"],chut:"slana",doba:15,ingredience:["vejce","rajče","okurka","salátové listy","olivový olej","citronová šťáva","sůl","pepř","červená cibule","feta"],foto:"",url:"https://aktin.cz/zeleninovy-salat-s-vajickem",popis:"Lehký salát plný zeleniny a bílkovin z vajíček.",porce:2,postup:["Uvař vejce natvrdo (10 min).","Nakrájej zeleninu.","Smíchej, ochuť olivovým olejem a solí."],nakup:["2 vejce","2 rajče","1 okurka","1 hrst salátové listy","2 lžíce olivový olej"],zdroj:"aktin.cz",pridano:null},
+  {id:3,name:"Cottage placky naslano i nasladko",sekce:["snidane","svacinky"],chut:"sladka",doba:25,ingredience:["cottage cheese","vejce","ovesné vločky","med","borůvky","vanilka","skořice","olej","mouka","prášek do pečiva"],foto:"",url:"https://aktin.cz/cottage-placky-naslano-i-nasladko",popis:"Nadýchané placky z cottage cheese – sladká i slaná varianta.",porce:2,postup:["Smíchej cottage cheese s vejci a vločkami.","Smaž na pánvi na slabém oleji.","Podávej s medem nebo zeleninou."],nakup:["250 g cottage cheese","2 vejce","4 lžíce ovesné vločky","med nebo zelenina dle varianty"],zdroj:"aktin.cz",pridano:null},
+  {id:4,name:"Bowl s divokým lososem a zeleninou",sekce:["obedy","vecere"],chut:"slana",doba:10,ingredience:["losos","avokádo","hnědá rýže","okurka","sójová omáčka","sezam","zázvor","limetka","edamame","mrkev"],foto:"",url:"https://aktin.cz/bowl-s-divokym-lososem-a-zeleninou",popis:"Výživný bowl s lososem, avokádem a hnědou rýží.",porce:1,postup:["Uvař rýži.","Nakrájej avokádo a okurku.","Složi bowl, přidej lososa a sójovou omáčku."],nakup:["150 g divoký losos","½ avokádo","150 g hnědá rýže","½ okurka","2 lžíce sójová omáčka"],zdroj:"aktin.cz",pridano:null},
+  {id:5,name:"Avokádový toast s vejci",sekce:["snidane"],chut:"slana",doba:10,ingredience:["avokádo","vejce","celozrnný chléb","citron","chilli vločky","sůl","pepř","olivový olej","rukola","cherry rajčata"],foto:"",url:"https://aktin.cz/avokadovy-toast-s-vejci",popis:"Klasický avokádový toast se smaženým vejcem a chilli.",porce:1,postup:["Rozmačkej avokádo s citronem a solí.","Opeč chleba.","Namaž avokádem, přidej vejce a chilli."],nakup:["1 avokádo","2 vejce","2 plátky celozrnný chléb","½ citron","chilli dle chuti"],zdroj:"aktin.cz",pridano:null},
+  {id:6,name:"Proteinové ovesné kaše s borůvkami",sekce:["snidane"],chut:"sladka",doba:10,ingredience:["ovesné vločky","borůvky","banán","proteinový prášek","mandlové mléko","med","chia semínka","skořice","vlašské ořechy","arašídové máslo"],foto:"",url:"https://aktin.cz/proteinove-ovsene-kase-s-boruvkami",popis:"Sytá ranní kaše s proteinem a čerstvým ovocem.",porce:1,postup:["Uvař vločky v mandlovém mléce.","Vmíchej protein.","Přidej borůvky a nakrájený banán."],nakup:["80 g ovesné vločky","100 g borůvky","1 banán","1 odměrka protein","250 ml mandlové mléko"],zdroj:"aktin.cz",pridano:null},
+  {id:7,name:"Kuřecí wrap s avokádem",sekce:["obedy","svacinky"],chut:"slana",doba:20,ingredience:["kuřecí prsa","avokádo","tortilla","rajče","salátové listy","smetanový sýr","citron","česnek","paprika","sůl","pepř"],foto:"",url:"https://aktin.cz/kureci-wrap-s-avokadem",popis:"Plněný wrap s grilovaným kuřetem a svěžím avokádem.",porce:2,postup:["Griluj kuřecí prsa a nakrájej na plátky.","Rozmačkej avokádo.","Naplň tortillu a zaroluj."],nakup:["200 g kuřecí prsa","1 avokádo","2 tortilla","1 rajče","hrst salát"],zdroj:"aktin.cz",pridano:null},
+  {id:8,name:"Čokoládové proteinové brownies",sekce:["dezerty","svacinky"],chut:"sladka",doba:35,ingredience:["banán","kakao","proteinový prášek","vejce","arašídové máslo","med","vanilka","prášek do pečiva","sůl","čokoláda"],foto:"",url:"https://aktin.cz/cokoladove-proteinove-brownies",popis:"Zdravé brownies bez mouky s vysokým obsahem bílkovin.",porce:8,postup:["Smíchej rozmačkané banány s vejci.","Přidej kakao, protein a arašídové máslo.","Peč při 180 °C 20 minut."],nakup:["2 banán","3 lžíce kakao","2 odměrky protein","2 vejce","3 lžíce arašídové máslo"],zdroj:"aktin.cz",pridano:null},
+  {id:9,name:"Losos s batáty a brokolicí",sekce:["vecere"],chut:"slana",doba:35,ingredience:["losos","batáty","brokolice","olivový olej","česnek","citron","sůl","pepř","paprika","tymián","rozmarýn"],foto:"",url:"https://aktin.cz/losos-s-bataty",popis:"Výživná večeře s omega-3 a komplexními sacharidy.",porce:2,postup:["Předehřej troubu na 200 °C.","Batáty nakrájej a peč 20 min.","Přidej lososa a brokolici, peč dalších 15 min."],nakup:["2 filet losos","2 batát","1 brokolice","3 lžíce olivový olej","3 stroužky česnek"],zdroj:"aktin.cz",pridano:null},
+  {id:10,name:"Řecký jogurt s granolou a ovocem",sekce:["snidane","svacinky"],chut:"sladka",doba:5,ingredience:["řecký jogurt","granola","jahody","med","chia semínka","borůvky","maliny","kokos","mandle","vanilka"],foto:"",url:"https://aktin.cz/recky-jogurt-s-granolou",popis:"Rychlá snídaně plná probiotik, vlákniny a vitamínů.",porce:1,postup:["Nalij jogurt do misky.","Posyp granolou a chia.","Přidej jahody a med."],nakup:["200 g řecký jogurt","4 lžíce granola","100 g jahody","1 lžíce med","1 lžíce chia semínka"],zdroj:"aktin.cz",pridano:null},
+  {id:11,name:"Kuřecí polévka s nudlemi",sekce:["polevky","obedy"],chut:"slana",doba:45,ingredience:["kuřecí prsa","mrkev","celer","nudle","petrželka","cibule","česnek","bobkový list","sůl","pepř","kurkuma","kuřecí vývar"],foto:"",url:"https://aktin.cz/kureci-polevka",popis:"Klasická domácí kuřecí polévka, která zahřeje a zasytí.",porce:4,postup:["Uvař kuřecí prsa s kořenovou zeleninou.","Vyjmi maso, nakrájej.","Přidej nudle a vař 10 min, dozdobi petrželkou."],nakup:["300 g kuřecí prsa","2 mrkev","¼ celer","100 g nudle","čerstvá petrželka"],zdroj:"aktin.cz",pridano:null},
+  {id:12,name:"Arašídové smoothie s banánem",sekce:["napoje","svacinky"],chut:"sladka",doba:5,ingredience:["arašídové máslo","banán","mandlové mléko","proteinový prášek","med","led","skořice","kakao","ovesné vločky","chia semínka"],foto:"",url:"https://aktin.cz/arasidove-smoothie",popis:"Krémové smoothie jako rychlá svačina nebo po tréninku.",porce:1,postup:["Vše dej do mixéru.","Mixuj 30 vteřin.","Podávej ihned nebo vychlaď."],nakup:["2 lžíce arašídové máslo","1 banán","250 ml mandlové mléko","1 odměrka protein","1 lžíce med"],zdroj:"aktin.cz",pridano:null}
+];
+
+// Spíž — defaultní potraviny doma
+let spiz = ["olivový olej","sůl","pepř","česnek","cibule"];
+let pocetOsob = 2; // defaultně pro 2 osoby
+
+let fSekce = [];
+const dnyLabels = {po:"Pondělí",ut:"Úterý",st:"Středa",ct:"Čtvrtek",pa:"Pátek",so:"Sobota",ne:"Neděle"};
+
+function isNova(r) {
+  if (!r.pridano) return false;
+  return new Date(r.pridano) >= dnesStart;
+}
+
+function showPage(p, btn) {
+  document.querySelectorAll('.page').forEach(el => el.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(el => el.classList.remove('active'));
+  document.getElementById('page-'+p).classList.add('active');
+  if (btn) btn.classList.add('active');
+  if (p === 'planner') renderWeek();
+  if (p === 'nastaveni') renderSpiz();
+}
+
+function initSekceFilter() {
+  const el = document.getElementById('filtrSekce');
+  el.innerHTML = Object.entries(SEKCE_LABELS).map(([k,l]) =>
+    `<label class="filter-row"><input type="checkbox" value="${k}" onchange="toggleSekce('${k}')"> ${l}</label>`
+  ).join('');
+}
+
+function toggleSekce(k) {
+  if (fSekce.includes(k)) fSekce = fSekce.filter(s => s !== k);
+  else fSekce.push(k);
+  renderGrid();
+}
+
+function getFiltrovane() {
+  const q = document.getElementById('searchInput').value.toLowerCase().trim();
+  const chut = document.querySelector('input[name="chut"]:checked')?.value || '';
+  const dobaEl = document.querySelector('input[name="doba"]:checked');
+  const dobaMax = dobaEl ? parseInt(dobaEl.value) : 0;
+  const dobaMin = dobaEl?.dataset.min ? parseInt(dobaEl.dataset.min) : 0;
+  const ing = document.getElementById('filtrIng').value.toLowerCase().trim();
+  const hledaneIng = ing ? ing.split(/[\s,]+/).filter(Boolean) : [];
+  const novinky = document.getElementById('filtrNovinky').checked;
+
+  return recepty.filter(r => {
+    if (novinky && !isNova(r)) return false;
+    if (fSekce.length && !fSekce.some(s => r.sekce.includes(s))) return false;
+    if (chut && r.chut !== chut) return false;
+    if (dobaMax && r.doba > dobaMax) return false;
+    if (dobaMin && r.doba < dobaMin) return false;
+    if (hledaneIng.length && !hledaneIng.some(h => r.ingredience.some(i => i.toLowerCase().includes(h)))) return false;
+    if (q && !r.name.toLowerCase().includes(q) && !r.ingredience.some(i => i.toLowerCase().includes(q))) return false;
+    return true;
+  });
+}
+
+function cardHTML(r, matchIng) {
+  const nova = isNova(r);
+  return `
+    <div class="card${nova?' nova':''}" onclick="openDetail(${r.id})">
+      ${r.foto ? `<div class="card-img"><img src="${r.foto}" alt="${r.name}" onerror="this.parentElement.style.display='none'"></div>` : `<div class="card-img-placeholder">🍽️</div>`}
+      <div class="card-body">
+        <div class="tags">
+          ${r.sekce.slice(0,2).map(s => `<span class="tag" style="background:${PASTEL[s]||'#F0EEE8'};color:${TEXTC[s]||'#555'}">${SEKCE_LABELS[s]}</span>`).join('')}
+          ${nova ? '<span class="tag" style="background:#FDE8D8;color:#8B4513">Nové ✨</span>' : ''}
+          ${r.zdroj==='vlastní' ? '<span class="tag" style="background:#E8F5E8;color:#2D6A2D">vlastní</span>' : ''}
+          ${matchIng ? `<span class="match-badge">✓ ${matchIng} shoda</span>` : ''}
+        </div>
+        <div class="card-name">${r.name}</div>
+        <div class="card-meta"><span>⏱ ${r.doba} min</span><span>${r.chut==='sladka'?'🍯 sladká':'🧂 slaná'}</span></div>
+      </div>
+    </div>`;
+}
+
+function renderGrid() {
+  const filtered = getFiltrovane();
+  document.getElementById('countLabel').textContent = filtered.length + ' receptů';
+  const grid = document.getElementById('recipeGrid');
+  if (!filtered.length) {
+    grid.innerHTML = '<div class="empty"><div class="empty-icon">🥦</div><div style="font-size:16px">Žádné recepty pro tyto filtry.</div></div>';
+    return;
+  }
+  grid.innerHTML = filtered.map(r => cardHTML(r, null)).join('');
+}
+
+function resetFiltry() {
+  fSekce = [];
+  document.querySelectorAll('#filtrSekce input').forEach(el => el.checked = false);
+  document.querySelector('input[name="chut"][value=""]').checked = true;
+  document.querySelector('input[name="doba"][value=""]').checked = true;
+  document.getElementById('filtrIng').value = '';
+  document.getElementById('searchInput').value = '';
+  document.getElementById('filtrNovinky').checked = false;
+  renderGrid();
+}
+
+// SNĚZ LEDNICI — fuzzy matching + třístupňové řazení
+function levenshtein(a, b) {
+  const m = a.length, n = b.length;
+  const dp = Array.from({length: m+1}, (_,i) => Array.from({length: n+1}, (_,j) => i===0?j:j===0?i:0));
+  for (let i=1;i<=m;i++) for (let j=1;j<=n;j++)
+    dp[i][j] = a[i-1]===b[j-1] ? dp[i-1][j-1] : 1+Math.min(dp[i-1][j],dp[i][j-1],dp[i-1][j-1]);
+  return dp[m][n];
+}
+
+function fuzzyMatch(hledany, ingredience) {
+  const h = hledany.toLowerCase().trim();
+  for (const ing of ingredience) {
+    const i = ing.toLowerCase();
+    if (i.includes(h) || h.includes(i)) return true;
+    const words = i.split(/\s+/);
+    for (const w of words) {
+      if (w.length < 3 || h.length < 3) continue;
+      const shorter = h.length < w.length ? h : w;
+      const longer  = h.length < w.length ? w : h;
+      if (longer.startsWith(shorter) && shorter.length >= 3) return true;
+      const maxDist = h.length <= 4 ? 1 : h.length <= 6 ? 2 : 3;
+      if (levenshtein(h, w) <= maxDist) return true;
+    }
+    if (h.length >= 4) {
+      const maxDist = h.length <= 5 ? 2 : 3;
+      if (levenshtein(h, i.split(' ')[0]) <= maxDist) return true;
+    }
+  }
+  return false;
+}
+
+function hledejVLednici() {
+  const val = document.getElementById('lednicaInput').value.toLowerCase().trim();
+  const result = document.getElementById('lednicaResult');
+  const empty = document.getElementById('lednicaEmpty');
+  if (!val) { result.style.display='none'; empty.style.display='none'; return; }
+
+  const hledane = val.split(/[\s,;]+/).map(s=>s.trim()).filter(s=>s.length>1);
+  if (!hledane.length) { result.style.display='none'; empty.style.display='none'; return; }
+
+  const scored = recepty.map(r => {
+    const matchCount = hledane.filter(h => fuzzyMatch(h, r.ingredience)).length;
+    return {r, matchCount, total: hledane.length};
+  }).filter(x => x.matchCount > 0);
+
+  if (!scored.length) {
+    result.style.display='none'; empty.style.display='block'; return;
+  }
+
+  // Třístupňové řazení
+  const presne = scored.filter(x => x.matchCount === x.total).sort((a,b)=>a.r.doba-b.r.doba);
+  const vetsinaShoudy = scored.filter(x => x.matchCount < x.total && x.matchCount / x.total >= 0.5).sort((a,b)=>b.matchCount-a.matchCount||a.r.doba-b.r.doba);
+  const aspon1 = scored.filter(x => x.matchCount / x.total < 0.5).sort((a,b)=>b.matchCount-a.matchCount||a.r.doba-b.r.doba);
+
+  empty.style.display='none';
+  result.style.display='block';
+
+  let html = '';
+  let labelText = `Hledám recepty pro: ${hledane.join(', ')} — nalezeno ${scored.length} receptů`;
+  document.getElementById('lednicaLabel').textContent = labelText;
+
+  if (presne.length) {
+    html += `<div style="font-size:12px;font-weight:600;letter-spacing:0.08em;color:#1A7A4A;text-transform:uppercase;margin-bottom:12px">✓ Přesná shoda — všechny suroviny (${presne.length})</div>`;
+    html += `<div class="grid" style="margin-bottom:2rem">${presne.map(({r,matchCount}) => cardHTML(r, `${matchCount}/${matchCount} surovin`)).join('')}</div>`;
+  }
+  if (vetsinaShoudy.length) {
+    html += `<div style="font-size:12px;font-weight:600;letter-spacing:0.08em;color:#7A4A1A;text-transform:uppercase;margin-bottom:12px">~ Většina surovin (${vetsinaShoudy.length})</div>`;
+    html += `<div class="grid" style="margin-bottom:2rem">${vetsinaShoudy.map(({r,matchCount,total}) => cardHTML(r, `${matchCount}/${total} surovin`)).join('')}</div>`;
+  }
+  if (aspon1.length) {
+    html += `<div style="font-size:12px;font-weight:600;letter-spacing:0.08em;color:#8A8880;text-transform:uppercase;margin-bottom:12px">Aspoň jedna surovina (${aspon1.length})</div>`;
+    html += `<div class="grid">${aspon1.map(({r,matchCount,total}) => cardHTML(r, `${matchCount}/${total} surovin`)).join('')}</div>`;
+  }
+
+  document.getElementById('lednicaGrid').innerHTML = html;
+}
+
+function openDetail(id) {
+  const r = recepty.find(x => x.id === id);
+  if (!r) return;
+  document.getElementById('detailModal').innerHTML = `
+    ${r.foto ? `<div class="modal-img"><img src="${r.foto}" alt="${r.name}" onerror="this.parentElement.style.display='none'"></div>` : ''}
+    <div class="modal-body">
+      <div class="tags">${r.sekce.map(s => `<span class="tag" style="background:${PASTEL[s]||'#F0EEE8'};color:${TEXTC[s]||'#555'}">${SEKCE_LABELS[s]}</span>`).join('')}${isNova(r)?'<span class="tag" style="background:#FDE8D8;color:#8B4513">Nové ✨</span>':''}</div>
+      <div class="modal-title">${r.name}</div>
+      <div class="modal-meta"><span>⏱ ${r.doba} min</span><span>🍽 ${r.porce} porce</span><span>${r.chut==='sladka'?'🍯 sladká':'🧂 slaná'}</span></div>
+      <div class="modal-desc">${r.popis}</div>
+      <div class="section-label">Ingredience</div>
+      <div class="ing-chips">${r.ingredience.map(i => `<span class="chip">${i}</span>`).join('')}</div>
+      ${r.nakup?.length ? `<div class="section-label">Nákupní seznam</div><div style="margin-bottom:1.25rem">${r.nakup.map(i => `<div style="font-size:14px;padding:4px 0;color:#4A4840">• ${i}</div>`).join('')}</div>` : ''}
+      ${r.postup?.length ? `<div class="section-label">Postup</div><div style="margin-bottom:1.25rem">${r.postup.map((k,i) => `<div class="step"><span class="step-num">${i+1}</span><span class="step-text">${k}</span></div>`).join('')}</div>` : ''}
+      <div class="modal-actions">
+        ${r.url ? `<a href="${r.url}" target="_blank" class="btn-outline">Otevřít originál ↗</a>` : ''}
+        <button class="btn-dark" onclick="document.getElementById('detailOverlay').classList.remove('open')">Zavřít</button>
+      </div>
+    </div>`;
+  document.getElementById('detailOverlay').classList.add('open');
+}
+
+function closeDetail(e) {
+  if (e.target === document.getElementById('detailOverlay')) document.getElementById('detailOverlay').classList.remove('open');
+}
+
+function openPridat() {
+  document.getElementById('fSekceChips').innerHTML = Object.entries(SEKCE_LABELS).map(([k,l]) =>
+    `<button class="sekce-chip" data-key="${k}" onclick="toggleFSekce(this)">${l}</button>`).join('');
+  document.getElementById('pridatOverlay').classList.add('open');
+}
+function toggleFSekce(btn) { btn.classList.toggle('active'); }
+function closePridat(e) { if (e.target===document.getElementById('pridatOverlay')) document.getElementById('pridatOverlay').classList.remove('open'); }
+function closePridatBtn() { document.getElementById('pridatOverlay').classList.remove('open'); }
+
+function pridejRecept() {
+  const name = document.getElementById('fName').value.trim();
+  if (!name) return alert('Zadej název receptu.');
+  const aktivniSekce = [...document.querySelectorAll('#fSekceChips .sekce-chip.active')].map(b => b.dataset.key);
+  const r = {
+    id: Date.now(),
+    name,
+    sekce: aktivniSekce.length ? aktivniSekce : ['snidane'],
+    chut: document.getElementById('fChut').value,
+    doba: parseInt(document.getElementById('fDoba').value) || 30,
+    popis: document.getElementById('fPopis').value,
+    ingredience: document.getElementById('fIng').value.split(/[\s,]+/).filter(Boolean),
+    postup: document.getElementById('fPostup').value.split('\n').filter(Boolean),
+    nakup: document.getElementById('fNakup').value.split('\n').filter(Boolean),
+    foto: '', url: '', porce: 2, zdroj: 'vlastní',
+    pridano: new Date().toISOString()
+  };
+  recepty.unshift(r);
+  document.getElementById('pridatOverlay').classList.remove('open');
+  ['fName','fPopis','fIng','fPostup','fNakup'].forEach(id => document.getElementById(id).value = '');
+  renderGrid();
+}
+
+// PLANNER — 4 sloty denně
+const SLOTY = ['snidane','obed','svacina','vecere'];
+const SLOT_LABELS = {snidane:'Snídaně',obed:'Oběd',svacina:'Svačina',vecere:'Večeře'};
+const SLOT_SEKCE = {snidane:['snidane'],obed:['obedy'],svacina:['svacinky','dezerty','napoje','salaty'],vecere:['vecere','obedy']};
+
+// planner: {po:{snidane:null,obed:null,svacina:null,vecere:null}, ...}
+let planner = {};
+Object.keys(dnyLabels).forEach(d => { planner[d] = {snidane:null,obed:null,svacina:null,vecere:null}; });
+let navrhyData = null;
+
+// nákupní seznam — pole objektů {id, nazev, mnozstvi, jednotka, odkliknuto, rucni}
+let nakupniSeznam = [];
+let pidatJidloDen = null, pridatJidloSlot = null;
+
+function renderWeek() {
+  const grid = document.getElementById('weekGrid');
+  grid.innerHTML = Object.entries(dnyLabels).map(([den, label]) => `
+    <div style="display:grid;grid-template-columns:90px repeat(4,1fr);border-bottom:1px solid #F0EEE8">
+      <div style="padding:10px 12px;font-size:14px;font-weight:500;color:#1A1A18;display:flex;align-items:center">${label}</div>
+      ${SLOTY.map(slot => {
+        const jidlo = planner[den][slot];
+        return `<div class="week-cell">
+          ${jidlo ? `
+            <div class="week-jidlo" onclick="openDetail(${jidlo.id||0})" title="${jidlo.name}">
+              <span class="week-jidlo-name">${jidlo.name}</span>
+              <button class="week-jidlo-remove" onclick="event.stopPropagation();odebratZPlanneru('${den}','${slot}')">×</button>
+            </div>` : ''}
+          <button class="week-pridat" onclick="otevriPridatJidlo('${den}','${slot}')">+ přidat</button>
+        </div>`;
+      }).join('')}
+    </div>`).join('');
+}
+
+let pjPorce = 2;
+
+function zmenPjPorce(d) {
+  pjPorce = Math.max(1, pjPorce + d);
+  document.getElementById('pjPorceVal').textContent = pjPorce;
+}
+
+function otevriPridatJidlo(den, slot) {
+  pidatJidloDen = den; pridatJidloSlot = slot;
+  // Předvyplň existující jídlo pokud editujeme
+  const existujici = planner[den][slot];
+  document.getElementById('pridatJidloSlot').textContent = `${dnyLabels[den]} — ${SLOT_LABELS[slot]}`;
+  document.getElementById('pjNazev').value = existujici ? existujici.name : '';
+  document.getElementById('pjNakup').value = existujici ? (existujici.nakup||[]).join('\n') : '';
+  pjPorce = existujici ? (existujici.porce || pocetOsob) : pocetOsob;
+  document.getElementById('pjPorceVal').textContent = pjPorce;
+  document.getElementById('pridatJidloOverlay').classList.add('open');
+}
+
+function ulozRucniJidlo() {
+  const nazev = document.getElementById('pjNazev').value.trim();
+  if (!nazev) return alert('Zadej název jídla.');
+  const nakup = document.getElementById('pjNakup').value.split('\n').filter(Boolean);
+  const nalezeny = recepty.find(r => r.name.toLowerCase() === nazev.toLowerCase());
+  planner[pidatJidloDen][pridatJidloSlot] = nalezeny
+    ? {...nalezeny, porceVJidelnicku: pjPorce}
+    : {id: 0, name: nazev, nakup, ingredience: [], sekce: [pridatJidloSlot], porce: pjPorce, porceVJidelnicku: pjPorce};
+  document.getElementById('pridatJidloOverlay').classList.remove('open');
+  renderWeek();
+}
+
+function odebratZPlanneru(den, slot) {
+  planner[den][slot] = null;
+  renderWeek();
+}
+
+function generujNavrhy(obnovitBunky) {
+  const ingText = document.getElementById('plannerIng').value.toLowerCase().trim();
+  const maxDoba = parseInt(document.getElementById('plannerDoba').value);
+  const pozadovaneIng = ingText ? ingText.split(/[\s,;]+/).map(s=>s.trim()).filter(s=>s.length>1) : [];
+
+  const kandidati = {};
+  SLOTY.forEach(slot => {
+    kandidati[slot] = recepty.filter(r =>
+      r.doba <= maxDoba && SLOT_SEKCE[slot].some(s => r.sekce.includes(s))
+    ).sort(() => Math.random() - 0.5);
+  });
+
+  if (!navrhyData) {
+    navrhyData = {};
+    Object.keys(dnyLabels).forEach(d => { navrhyData[d] = {snidane:null,obed:null,svacina:null,vecere:null}; });
+  }
+
+  const bunky = obnovitBunky ||
+    Object.keys(dnyLabels).flatMap(den => SLOTY.map(slot => ({den, slot})));
+
+  // Zachovej pouzité z buněk které NEgenerujeme
+  const pouzite = new Set();
+  Object.keys(dnyLabels).forEach(den => SLOTY.forEach(slot => {
+    const zachovat = obnovitBunky && !obnovitBunky.some(b => b.den===den && b.slot===slot);
+    if (zachovat && navrhyData[den][slot]) pouzite.add(navrhyData[den][slot].id);
+  }));
+
+  const pokryte = new Set();
+  bunky.forEach(({den, slot}) => {
+    let vybrany = null;
+    if (pozadovaneIng.length) {
+      vybrany = kandidati[slot].find(r =>
+        !pouzite.has(r.id) &&
+        pozadovaneIng.some(h => fuzzyMatch(h, r.ingredience) && !pokryte.has(h))
+      );
+    }
+    if (!vybrany) vybrany = kandidati[slot].find(r => !pouzite.has(r.id));
+    if (!vybrany) vybrany = kandidati[slot][0] || null;
+    if (vybrany) {
+      pouzite.add(vybrany.id);
+      pozadovaneIng.forEach(h => { if (fuzzyMatch(h, vybrany.ingredience)) pokryte.add(h); });
+    }
+    navrhyData[den][slot] = vybrany;
+  });
+
+  const nepokryte = pozadovaneIng.filter(h => !pokryte.has(h));
+  const labelEl = document.getElementById('navrhyPokrytiLabel');
+  if (pozadovaneIng.length) {
+    labelEl.textContent = nepokryte.length === 0
+      ? '✓ Všechny suroviny jsou zahrnuty v jídelníčku'
+      : `⚠ Nezařazeno: ${nepokryte.join(', ')}`;
+    labelEl.style.color = nepokryte.length === 0 ? '#2D6A2D' : '#7A4A1A';
+  } else labelEl.textContent = '';
+
+  document.getElementById('navrhyBox').style.display = 'block';
+  renderNavrhy();
+}
+
+function renderNavrhy() {
+  document.getElementById('navrhyList').innerHTML = `
+    <div style="display:grid;grid-template-columns:24px 80px repeat(4,1fr);background:#F5F3EE;border-radius:6px 6px 0 0;margin-bottom:2px;align-items:center">
+      <div style="padding:6px 4px 6px 8px">
+        <input type="checkbox" id="checkVse" onchange="toggleVsechnyNavrhy(this.checked)" style="accent-color:#1A1A18;cursor:pointer">
+      </div>
+      <div></div>
+      ${SLOTY.map(s=>`<div style="padding:6px 8px;font-size:10px;font-weight:600;color:#8A8880;text-transform:uppercase">${SLOT_LABELS[s]}</div>`).join('')}
+    </div>
+    <div id="pregenerujBar" style="display:none;padding:8px 10px;background:#FFF9F0;border:1px solid #F0E0C0;border-radius:6px;margin-bottom:6px;align-items:center;justify-content:space-between">
+      <span style="font-size:13px;color:#7A4A1A" id="pregenerujCount"></span>
+      <button onclick="pregenerujVybrane()" style="padding:6px 14px;background:#1A1A18;color:#fff;border:none;border-radius:6px;font-size:13px;font-weight:500;cursor:pointer">🔄 Přegenerovat vybrané</button>
+    </div>
+    ${Object.entries(dnyLabels).map(([den,label])=>`
+      <div style="display:grid;grid-template-columns:24px 80px repeat(4,1fr);border-bottom:1px solid #EDE0C8;align-items:start">
+        <div style="padding:8px 4px 8px 8px;padding-top:14px">
+          <input type="checkbox" class="den-check" data-den="${den}" onchange="toggleDenNavrhy('${den}',this.checked)" style="accent-color:#1A1A18;cursor:pointer">
+        </div>
+        <div style="padding:8px;font-size:13px;color:#8A8880;padding-top:12px">${label}</div>
+        ${SLOTY.map(slot=>{
+          const r = navrhyData[den][slot];
+          const cbId = `nc-${den}-${slot}`;
+          return `<div class="navrh-drop-zone" style="padding:5px;transition:background 0.1s"
+            ondragover="event.preventDefault();this.style.background='#E8F0FF';this.style.outline='2px dashed #7AAAE8'"
+            ondragleave="this.style.background='';this.style.outline=''"
+            ondrop="dropNavrh(event,'${den}','${slot}')">
+            ${r
+              ? `<div draggable="true"
+                  ondragstart="dragStartNavrh(event,'${den}','${slot}')"
+                  ondragend="dragEndNavrh(event)"
+                  style="background:#fff;border:1px solid #E0D0B0;border-radius:8px;padding:7px 8px;font-size:12px;line-height:1.4;cursor:grab">
+                  <label style="display:flex;align-items:flex-start;gap:6px;cursor:pointer;margin-bottom:5px">
+                    <input type="checkbox" class="navrh-check" id="${cbId}" data-den="${den}" data-slot="${slot}" onchange="updatePregenerujBar()" style="accent-color:#1A1A18;margin-top:2px;cursor:pointer;flex-shrink:0" onclick="event.stopPropagation()">
+                    <span style="display:flex;align-items:center;gap:4px;flex:1">
+                      <span style="color:#C0B8B0;font-size:13px;flex-shrink:0" title="Přetáhni pro přesun">⠿</span>
+                      <span style="font-weight:500;line-height:1.3">${r.name}</span>
+                    </span>
+                  </label>
+                  <div style="display:flex;gap:3px">
+                    <button onclick="event.stopPropagation();pregenerujBunku('${den}','${slot}')"
+                      style="flex:1;padding:3px;font-size:11px;background:#F0EEE8;border:1px solid #E0DED8;border-radius:4px;cursor:pointer">🔄 jiný</button>
+                    <button onclick="event.stopPropagation();smazNavrhBunku('${den}','${slot}')"
+                      style="padding:3px 8px;font-size:11px;background:#FDE8D8;border:1px solid #F5C4A0;border-radius:4px;cursor:pointer;color:#8B4513">×</button>
+                  </div>
+                </div>`
+              : `<button onclick="pregenerujBunku('${den}','${slot}')"
+                  style="width:100%;padding:8px 4px;font-size:12px;color:#8A8880;background:transparent;border:1px dashed #D0CEC8;border-radius:8px;cursor:pointer;text-align:center">
+                  + přidat
+                </button>`}
+          </div>`;
+        }).join('')}
+      </div>`).join('')}`;
+  updatePregenerujBar();
+}
+
+let dragNavrhSource = null;
+
+function dragStartNavrh(e, den, slot) {
+  dragNavrhSource = {den, slot};
+  e.dataTransfer.effectAllowed = 'move';
+  setTimeout(() => { if (e.currentTarget) e.currentTarget.style.opacity = '0.4'; }, 0);
+}
+
+function dragEndNavrh(e) {
+  if (e.currentTarget) e.currentTarget.style.opacity = '';
+  document.querySelectorAll('.navrh-drop-zone').forEach(z => { z.style.background=''; z.style.outline=''; });
+  dragNavrhSource = null;
+}
+
+function dropNavrh(e, denCil, slotCil) {
+  e.preventDefault();
+  e.currentTarget.style.background = '';
+  e.currentTarget.style.outline = '';
+  if (!dragNavrhSource) return;
+  const {den: dZ, slot: sZ} = dragNavrhSource;
+  if (dZ === denCil && sZ === slotCil) { dragNavrhSource = null; return; }
+  const tmp = navrhyData[denCil][slotCil];
+  navrhyData[denCil][slotCil] = navrhyData[dZ][sZ];
+  navrhyData[dZ][sZ] = tmp;
+  dragNavrhSource = null;
+  renderNavrhy();
+}
+
+function toggleVsechnyNavrhy(checked) {
+  document.querySelectorAll('.navrh-check').forEach(cb => cb.checked = checked);
+  document.querySelectorAll('.den-check').forEach(cb => cb.checked = checked);
+  updatePregenerujBar();
+}
+
+function toggleDenNavrhy(den, checked) {
+  document.querySelectorAll(`.navrh-check[data-den="${den}"]`).forEach(cb => cb.checked = checked);
+  updatePregenerujBar();
+}
+
+function updatePregenerujBar() {
+  const checked = document.querySelectorAll('.navrh-check:checked');
+  const bar = document.getElementById('pregenerujBar');
+  if (!bar) return;
+  if (checked.length > 0) {
+    bar.style.display = 'flex';
+    document.getElementById('pregenerujCount').textContent = `Vybráno ${checked.length} jídel`;
+  } else {
+    bar.style.display = 'none';
+  }
+}
+
+function pregenerujVybrane() {
+  const checked = [...document.querySelectorAll('.navrh-check:checked')];
+  const bunky = checked.map(cb => ({den: cb.dataset.den, slot: cb.dataset.slot}));
+  if (!bunky.length) return;
+  generujNavrhy(bunky);
+}
+
+function pregenerujBunku(den, slot) {
+  generujNavrhy([{den, slot}]);
+}
+
+function smazNavrhBunku(den, slot) {
+  if (navrhyData) { navrhyData[den][slot] = null; renderNavrhy(); }
+}
+
+function schvalNavrhy() {
+  if (!navrhyData) return;
+  planner = JSON.parse(JSON.stringify(navrhyData));
+  // Nastav defaultní porce pro každé jídlo
+  Object.values(planner).forEach(den => Object.values(den).forEach(jidlo => {
+    if (jidlo && !jidlo.porceVJidelnicku) jidlo.porceVJidelnicku = pocetOsob;
+  }));
+  navrhyData = null;
+  document.getElementById('navrhyBox').style.display = 'none';
+  renderWeek();
+}
+
+// Drag & drop
+let dragSource = null;
+
+function renderWeek() {
+  document.getElementById('weekGrid').innerHTML = Object.entries(dnyLabels).map(([den, label]) => `
+    <div style="display:grid;grid-template-columns:90px repeat(4,1fr);border-bottom:1px solid #F0EEE8">
+      <div style="padding:10px 12px;font-size:14px;font-weight:500;display:flex;align-items:flex-start;padding-top:14px">${label}</div>
+      ${SLOTY.map(slot => {
+        const jidlo = planner[den][slot];
+        const porce = jidlo ? (jidlo.porceVJidelnicku || jidlo.porce || pocetOsob) : pocetOsob;
+        return `<div class="week-cell drop-zone"
+          ondragover="event.preventDefault();this.style.background='#E8F0FF';this.style.outline='2px dashed #7AAAE8'"
+          ondragleave="this.style.background='';this.style.outline=''"
+          ondrop="dropJidlo(event,'${den}','${slot}')">
+          ${jidlo ? `
+            <div class="week-jidlo" draggable="true"
+              ondragstart="dragStart(event,'${den}','${slot}')"
+              ondragend="dragEnd(event)"
+              onclick="if(!window._dragging)openDetail(${jidlo.id||0})">
+              <span style="font-size:11px;color:#C0B8B0;margin-right:2px;cursor:grab">⠿</span>
+              <span class="week-jidlo-name">${jidlo.name}</span>
+              <span style="display:flex;gap:2px;flex-shrink:0">
+                <button class="week-jidlo-remove" onclick="event.stopPropagation();otevriPridatJidlo('${den}','${slot}')" title="Upravit">✎</button>
+                <button class="week-jidlo-remove" onclick="event.stopPropagation();odebratZPlanneru('${den}','${slot}')" title="Odebrat">×</button>
+              </span>
+            </div>
+            <div style="display:flex;align-items:center;gap:4px;margin-top:4px;padding:0 2px">
+              <button onclick="event.stopPropagation();zmenPorce('${den}','${slot}',-1)"
+                style="width:20px;height:20px;border:1px solid #E0DED8;border-radius:4px;background:#fff;font-size:13px;cursor:pointer;display:flex;align-items:center;justify-content:center;line-height:1;flex-shrink:0">−</button>
+              <span style="font-size:11px;color:#8A8880;white-space:nowrap">${porce} ${porce===1?'porce':'porce'}</span>
+              <button onclick="event.stopPropagation();zmenPorce('${den}','${slot}',1)"
+                style="width:20px;height:20px;border:1px solid #E0DED8;border-radius:4px;background:#fff;font-size:13px;cursor:pointer;display:flex;align-items:center;justify-content:center;line-height:1;flex-shrink:0">+</button>
+            </div>` : ''}
+          <button class="week-pridat" onclick="otevriPridatJidlo('${den}','${slot}')">+ přidat</button>
+        </div>`;
+      }).join('')}
+    </div>`).join('');
+}
+
+function zmenPorce(den, slot, delta) {
+  const jidlo = planner[den][slot];
+  if (!jidlo) return;
+  const stara = jidlo.porceVJidelnicku || jidlo.porce || pocetOsob;
+  jidlo.porceVJidelnicku = Math.max(1, stara + delta);
+  renderWeek();
+}
+
+function dragStart(e, den, slot) {
+  dragSource = {den, slot};
+  window._dragging = true;
+  e.dataTransfer.effectAllowed = 'move';
+  e.currentTarget.style.opacity = '0.4';
+}
+function dragEnd(e) {
+  e.currentTarget.style.opacity = '';
+  setTimeout(() => { window._dragging = false; }, 80);
+  document.querySelectorAll('.drop-zone').forEach(z => z.style.background = '');
+}
+function dropJidlo(e, denCil, slotCil) {
+  e.preventDefault();
+  e.currentTarget.style.background = '';
+  if (!dragSource) return;
+  const {den: dZ, slot: sZ} = dragSource;
+  if (dZ === denCil && sZ === slotCil) { dragSource = null; return; }
+  const tmp = planner[denCil][slotCil];
+  planner[denCil][slotCil] = planner[dZ][sZ];
+  planner[dZ][sZ] = tmp;
+  dragSource = null;
+  renderWeek();
+}
+
+// NÁKUPNÍ SEZNAM
+function otevriNakup(btn) {
+  generujNakupniSeznam();
+  document.querySelectorAll('.page').forEach(el => el.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(el => el.classList.remove('active'));
+  document.getElementById('page-nakup').classList.add('active');
+  if (btn) btn.classList.add('active');
+  else document.querySelectorAll('.nav-btn')[3].classList.add('active');
+}
+
+function generujNakupniSeznam() {
+  const polozkyZPlanneru = [];
+  Object.values(planner).forEach(den => {
+    Object.values(den).forEach(jidlo => {
+      if (jidlo) (jidlo.nakup||[]).forEach(item =>
+        polozkyZPlanneru.push(parsePolozka(item, jidlo.porceVJidelnicku || pocetOsob, jidlo.porce || 2))
+      );
+    });
+  });
+
+  // Slouč — porovnávej normalizovaný nazev, zobrazuj nazevRaw z první shody
+  const sloucene = [];
+  for (const p of polozkyZPlanneru) {
+    const ex = sloucene.find(s => shodaNazvu(s.nazev, p.nazev));
+    if (ex) {
+      if (!ex.jednotka || ex.jednotka === p.jednotka) {
+        ex.mnozstvi += p.mnozstvi;
+        if (p.jednotka) ex.jednotka = p.jednotka;
+      } else sloucene.push({...p});
+    } else sloucene.push({...p});
+  }
+
+  // Odfiltruj spíž
+  const spizLower = spiz.map(s => normalizujNazev(s));
+  const odecteno = sloucene.filter(p => spizLower.some(s => shodaNazvu(s, p.nazev))).length;
+
+  const rucni = nakupniSeznam.filter(p => p.rucni);
+  nakupniSeznam = sloucene
+    .filter(p => !spizLower.some(s => shodaNazvu(s, p.nazev)))
+    .map((p, i) => ({id: i+1, ...p, odkliknuto: false, rucni: false}));
+  rucni.forEach(p => nakupniSeznam.push(p));
+
+  const info = document.getElementById('nakupInfo');
+  if (odecteno > 0) {
+    info.textContent = `✓ ${odecteno} ${odecteno===1?'položka z':'položky ze'} spíže vynechány · množství přepočítáno dle porcí`;
+    info.style.display = 'block';
+  } else {
+    info.textContent = 'Množství přepočítáno dle počtu porcí u každého jídla';
+    info.style.display = 'block';
+  }
+
+  renderNakup();
+}
+
+function renderNakup() {
+  const seznam = document.getElementById('nakupList');
+  const koupit = nakupniSeznam.filter(p => !p.odkliknuto);
+  const koupeno = nakupniSeznam.filter(p => p.odkliknuto);
+  document.getElementById('nakupPocet').textContent =
+    `${koupit.length} položek zbývá${koupeno.length ? ` · ${koupeno.length} koupeno` : ''}`;
+
+  function radek(p) {
+    const qty = formatMnozstvi(p);
+    const zobrazNazev = p.nazevRaw || p.nazev; // raw má správný pád
+    return `<div class="nakup-radek${p.odkliknuto?' odkliknuto':''}" id="nr-${p.id}">
+      <input type="checkbox" class="nakup-check" ${p.odkliknuto?'checked':''} onchange="toggleNakup(${p.id})">
+      <span class="nakup-nazev">${zobrazNazev}</span>
+      ${qty ? `<span class="nakup-mnozstvi">${qty}</span>` : ''}
+      <button class="nakup-odebrat" onclick="odeberZNakupu(${p.id})">×</button>
+    </div>`;
+  }
+
+  seznam.innerHTML = koupit.map(radek).join('') +
+    (koupeno.length ? `<div style="padding:8px 16px;font-size:11px;font-weight:600;color:#8A8880;text-transform:uppercase;margin-top:4px;border-top:1px solid #F0EEE8">Koupeno</div>` + koupeno.map(radek).join('') : '');
+}
+
+function toggleNakup(id) {
+  const p = nakupniSeznam.find(x => x.id===id);
+  if (p) { p.odkliknuto = !p.odkliknuto; renderNakup(); }
+}
+
+function odeberZNakupu(id) {
+  nakupniSeznam = nakupniSeznam.filter(x => x.id!==id);
+  renderNakup();
+}
+
+function pridatDoNakupu() {
+  const val = document.getElementById('nakupPridatInput').value.trim();
+  if (!val) return;
+  const parsed = parsePolozka(val);
+  const newId = Date.now();
+  nakupniSeznam.push({id: newId, ...parsed, odkliknuto: false, rucni: true});
+  document.getElementById('nakupPridatInput').value = '';
+  renderNakup();
+}
+
+function zrusitOdklikane() {
+  nakupniSeznam = nakupniSeznam.filter(p => !p.odkliknuto);
+  renderNakup();
+}
+
+// Parsování množství z textu jako "2 vejce", "½ avokáda", "3 lžíce oleje"
+const ZLOMKY = {'½':0.5,'¼':0.25,'¾':0.75,'⅓':0.333,'⅔':0.667,'1/2':0.5,'1/4':0.25,'3/4':0.75,'1/3':0.333};
+const JEDNOTKY = ['g','kg','ml','l','lžíce','lžička','hrst','kus','ks','plátky','plátků','stroužky','stroužků','odměrka','odměrky','filety','filety','čerstvá','čerstvé'];
+
+// Slovník: tvar z receptu → 1. pád jednotného čísla
+const LEMMA = {
+  // Zelenina
+  'avokáda':'avokádo','avokádu':'avokádo','avokádem':'avokádo',
+  'rajčata':'rajče','rajčat':'rajče','rajčete':'rajče','rajčetem':'rajče',
+  'okurky':'okurka','okurce':'okurka','okurku':'okurka','okurek':'okurka',
+  'brokolice':'brokolice','brokolici':'brokolice','brokolící':'brokolice',
+  'mrkve':'mrkev','mrkvi':'mrkev','mrkvě':'mrkev','mrkev':'mrkev',
+  'celeru':'celer','celerem':'celer',
+  'česneku':'česnek','česnekem':'česnek','česnekem':'česnek',
+  'cibule':'cibule','cibuli':'cibule','cibulí':'cibule',
+  'papriky':'paprika','paprice':'paprika','papriku':'paprika','paprik':'paprika',
+  'batáty':'batát','batátů':'batát','batátu':'batát','batátem':'batát',
+  'špenátu':'špenát','špenátem':'špenát',
+  'cuketě':'cuketa','cukety':'cuketa','cuketu':'cuketa',
+  'salátu':'salát','salátem':'salát',
+  'rukoly':'rukola','rukole':'rukola',
+  // Ovoce
+  'borůvky':'borůvky','borůvek':'borůvky','borůvkách':'borůvky',
+  'jahody':'jahody','jahod':'jahody','jahodách':'jahody',
+  'maliny':'maliny','malin':'maliny',
+  'banánu':'banán','banánem':'banán','banánů':'banán',
+  'citronu':'citron','citronem':'citron','citrónu':'citron',
+  'limetky':'limetka','limetku':'limetka','limet':'limetka',
+  'pomeranče':'pomeranč','pomeranču':'pomeranč',
+  'jablek':'jablko','jablka':'jablko','jablku':'jablko',
+  // Mléčné a vejce
+  'vajec':'vejce','vajíček':'vejce','vajíčka':'vejce','vejce':'vejce',
+  'sýra':'sýr','sýru':'sýr','sýrem':'sýr','sýrů':'sýr',
+  'másla':'máslo','máslu':'máslo','máslem':'máslo',
+  'jogurtu':'jogurt','jogurtem':'jogurt',
+  'smetany':'smetana','smetaně':'smetana','smetanu':'smetana',
+  'mléka':'mléko','mléku':'mléko','mlékem':'mléko',
+  'tvarohu':'tvaroh','tvarohem':'tvaroh',
+  'fety':'feta','fetě':'feta','fetu':'feta',
+  // Maso a ryby
+  'kuřecích':'kuřecí prsa','kuřecí':'kuřecí prsa',
+  'lososa':'losos','lososem':'losos','lososi':'losos',
+  'slaniny':'slanina','slanině':'slanina','slaninu':'slanina',
+  'šunky':'šunka','šunce':'šunka','šunku':'šunka',
+  'tuňáka':'tuňák','tuňákem':'tuňák',
+  // Luštěniny, obiloviny
+  'rýže':'rýže','rýži':'rýže','rýží':'rýže',
+  'nudlí':'nudle','nudle':'nudle','nudlích':'nudle',
+  'vloček':'ovesné vločky','vločky':'ovesné vločky','vločkách':'ovesné vločky',
+  'ovesných':'ovesné vločky','ovesné':'ovesné vločky',
+  'mouky':'mouka','mouce':'mouka','mouku':'mouka',
+  'chleba':'chléb','chlebě':'chléb','chlebem':'chléb',
+  'tortilly':'tortilla','tortillu':'tortilla','tortil':'tortilla',
+  // Oleje, omáčky, koření
+  'olivového':'olivový olej','olivovém':'olivový olej','olivovým':'olivový olej',
+  'sójové':'sójová omáčka','sójovou':'sójová omáčka','sójový':'sójová omáčka',
+  'sojové':'sójová omáčka','sojovou':'sójová omáčka',
+  'octu':'ocet','octem':'ocet',
+  'medu':'med','medem':'med',
+  'kakaa':'kakao','kakau':'kakao',
+  'skořice':'skořice','skořici':'skořice',
+  'zázvoru':'zázvor','zázvorem':'zázvor',
+  'kurkumy':'kurkuma','kurkumě':'kurkuma',
+  'tymiánu':'tymián','tymiánem':'tymián',
+  'rozmarínu':'rozmarýn','rozmarínem':'rozmarýn',
+  'petrželky':'petrželka','petrželce':'petrželka','petrželku':'petrželka',
+  'čerstvé':'čerstvá petrželka',
+  // Semínka, ořechy
+  'chia':'chia semínka','chie':'chia semínka',
+  'sezamu':'sezam','sezamem':'sezam',
+  'mandlí':'mandle','mandle':'mandle','mandlích':'mandle',
+  'ořechů':'ořechy','ořechy':'ořechy','ořeších':'ořechy',
+  'arašídů':'arašídy','arašídy':'arašídy',
+  // Ostatní
+  'proteinu':'protein','proteinový':'protein','proteinové':'protein',
+  'granoly':'granola','granole':'granola',
+  'kokosového':'kokosový olej','kokosové':'kokos',
+  'edamame':'edamame',
+};
+
+function lemmatizuj(raw) {
+  const s = raw.trim();
+  const klic = s.toLowerCase();
+  if (LEMMA[klic]) return LEMMA[klic];
+  const prvni = klic.split(/\s+/)[0];
+  if (LEMMA[prvni]) return LEMMA[prvni];
+  // Data receptů jsou teď v 1. pádu, ostatní vracíme jak jsou
+  return s;
+}
+
+function parsePolozka(text, pocetPorci, receptPorci) {
+  const t = text.trim();
+  const scale = (pocetPorci && receptPorci && receptPorci > 0) ? pocetPorci / receptPorci : 1;
+
+  for (const [zn, val] of Object.entries(ZLOMKY)) {
+    if (t.startsWith(zn + ' ') || t.startsWith(zn + '\u00a0')) {
+      const raw = t.slice(zn.length).trim();
+      return { mnozstvi: val * scale, jednotka: '', nazevRaw: lemmatizuj(raw), nazev: normalizujNazev(raw) };
+    }
+  }
+  const m = t.match(/^(\d+(?:[.,]\d+)?)\s*([a-žA-Ž]*)\s+(.+)$/u);
+  if (m) {
+    const cislo = parseFloat(m[1].replace(',','.'));
+    const jednotka = JEDNOTKY.includes(m[2].toLowerCase()) ? m[2] : '';
+    const raw = jednotka ? m[3] : (m[2] ? m[2]+' '+m[3] : m[3]);
+    return { mnozstvi: cislo * scale, jednotka, nazevRaw: lemmatizuj(raw), nazev: normalizujNazev(raw) };
+  }
+  return { mnozstvi: 1 * scale, jednotka: '', nazevRaw: lemmatizuj(t), nazev: normalizujNazev(t) };
+}
+
+function normalizujNazev(s) {
+  // sjednoť pád — odstraň koncovky pro základní shodu (vejce/vajec, avokádo/avokáda)
+  return s.toLowerCase()
+    .replace(/ě/g,'e').replace(/á/g,'a').replace(/é/g,'e').replace(/í/g,'i')
+    .replace(/ó/g,'o').replace(/ú|ů/g,'u').replace(/ý/g,'y').replace(/č/g,'c')
+    .replace(/š/g,'s').replace(/ž/g,'z').replace(/ř/g,'r').replace(/ň/g,'n')
+    .replace(/ť/g,'t').replace(/ď/g,'d')
+    .replace(/(ek|ku|ky|ce|ci|ch|em|ou|ách|ích|ům)$/,'')
+    .trim();
+}
+
+function shodaNazvu(a, b) {
+  const na = normalizujNazev(a), nb = normalizujNazev(b);
+  if (na === nb) return true;
+  if (na.includes(nb) || nb.includes(na)) return true;
+  if (na.length >= 4 && nb.length >= 4 && levenshtein(na, nb) <= 2) return true;
+  return false;
+}
+
+function formatMnozstvi(p) {
+  const m = p.mnozstvi;
+  let mStr = '';
+  if (m === 0.5) mStr = '½';
+  else if (m === 0.25) mStr = '¼';
+  else if (m === 0.75) mStr = '¾';
+  else if (m % 1 === 0) mStr = String(m);
+  else mStr = m.toFixed(1).replace('.0','');
+  return [mStr, p.jednotka].filter(Boolean).join(' ');
+}
+
+function setPocetOsob(n) {
+  pocetOsob = n;
+  document.querySelectorAll('.pocet-btn').forEach(btn => {
+    const isActive = btn.id === 'po'+n;
+    btn.style.background = isActive ? '#1A1A18' : '#fff';
+    btn.style.color = isActive ? '#fff' : '#1A1A18';
+    btn.style.borderColor = isActive ? '#1A1A18' : '#E0DED8';
+  });
+}
+
+// SPÍŽ / NASTAVENÍ
+function renderSpiz() {
+  document.getElementById('pantryTags').innerHTML = spiz.map((s,i) =>
+    `<span class="pantry-tag">${s}<button class="pantry-remove" onclick="odeberZeSpize(${i})">×</button></span>`).join('');
+}
+
+function pridejDoSpize() {
+  const val = document.getElementById('pantryInput').value.trim();
+  if (!val) return;
+  const polozky = val.split(/[,;]+/).map(s => s.trim()).filter(Boolean);
+  polozky.forEach(p => { if (!spiz.includes(p)) spiz.push(p); });
+  document.getElementById('pantryInput').value = '';
+  renderSpiz();
+}
+
+function odeberZeSpize(i) {
+  spiz.splice(i, 1);
+  renderSpiz();
+}
+
+function tiskniJidelnicek() {
+  const BARVY = {
+    snidane: {bg:'#F7EDE4', border:'#E8CDB8', text:'#7A5240', label:'Snídaně'},
+    obed:    {bg:'#E8F0E8', border:'#BACED4', text:'#3A5C3A', label:'Oběd'},
+    svacina: {bg:'#F5EDE0', border:'#DCCAAA', text:'#6B4F2A', label:'Svačina'},
+    vecere:  {bg:'#E4ECF4', border:'#B8CCDE', text:'#2A4460', label:'Večeře'},
+  };
+
+  const radkyHTML = Object.entries(dnyLabels).map(([den, label], di) => {
+    const rowBg = di % 2 === 0 ? '#FAFAF8' : '#fff';
+    const bunky = SLOTY.map(slot => {
+      const j = planner[den][slot];
+      const b = BARVY[slot];
+      const porce = j ? (j.porceVJidelnicku || j.porce || pocetOsob) : null;
+      return `<td style="padding:10px 12px;vertical-align:top;border-right:1px solid #EEE;border-bottom:1px solid #EEE">
+        ${j
+          ? `<div style="background:${b.bg};border:1px solid ${b.border};border-radius:8px;padding:8px 10px">
+               <div style="font-size:12px;font-weight:600;color:#1A1A18;line-height:1.4;margin-bottom:${porce?'3':'0'}px">${j.name}</div>
+               ${porce ? `<div style="font-size:10px;color:#9A9288;margin-top:2px">${porce} p.</div>` : ''}
+             </div>`
+          : `<div style="color:#D8D4CE;font-size:13px;text-align:center;padding:6px 0">—</div>`}
+      </td>`;
+    }).join('');
+    return `<tr style="background:${rowBg}">
+      <td style="padding:10px 14px;font-size:13px;font-weight:600;color:#4A4840;white-space:nowrap;border-right:2px solid #E8E4DC;border-bottom:1px solid #EEE;vertical-align:middle">${label}</td>
+      ${bunky}
+    </tr>`;
+  }).join('');
+
+  const html = `<!DOCTYPE html>
+<html lang="cs"><head><meta charset="UTF-8"><title>Jídelníček</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'DM Sans',sans-serif;background:#F2EFE9;min-height:100vh;padding:32px;color:#1A1A18}
+.page{max-width:820px;margin:0 auto;background:#fff;border-radius:16px;overflow:hidden;box-shadow:0 2px 24px rgba(0,0,0,0.07)}
+.header{background:#1A1A18;padding:22px 28px;display:flex;align-items:center;justify-content:space-between}
+.header-title{font-size:22px;font-weight:700;color:#fff;letter-spacing:-0.3px}
+.header-date{font-size:12px;color:#9A9890;margin-top:2px}
+.header-icon{font-size:28px}
+.legenda{display:flex;gap:16px;padding:14px 28px;background:#F7F5F2;border-bottom:1px solid #EEE;flex-wrap:wrap}
+.leg{display:flex;align-items:center;gap:6px;font-size:11px;font-weight:600;color:#6A6860;text-transform:uppercase;letter-spacing:0.05em}
+.leg-dot{width:12px;height:12px;border-radius:3px;flex-shrink:0}
+table{width:100%;border-collapse:collapse}
+thead th{padding:10px 12px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.07em;color:#8A8880;text-align:left;border-right:1px solid #EEE;border-bottom:2px solid #E8E4DC;background:#FAFAF8}
+thead th:first-child{border-right:2px solid #E8E4DC;width:80px}
+.btns{padding:20px 28px;display:flex;gap:10px;background:#F7F5F2;border-top:1px solid #EEE}
+.btns button{padding:9px 22px;border:none;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif}
+@media print{
+  body{background:#fff;padding:0}
+  .page{box-shadow:none;border-radius:0}
+  .btns{display:none}
+}
+</style></head><body>
+<div class="page">
+  <div class="header">
+    <div>
+      <div class="header-title">Jídelníček</div>
+      <div class="header-date">${new Date().toLocaleDateString('cs-CZ',{weekday:'long',year:'numeric',month:'long',day:'numeric'})}</div>
+    </div>
+    <div class="header-icon">🍽️</div>
+  </div>
+  <div class="legenda">
+    ${SLOTY.map(s => {
+      const b = BARVY[s];
+      return `<div class="leg"><div class="leg-dot" style="background:${b.bg};border:1.5px solid ${b.border}"></div>${b.label}</div>`;
+    }).join('')}
+  </div>
+  <table>
+    <thead><tr>
+      <th></th>
+      ${SLOTY.map(s => `<th style="background:${BARVY[s].bg};color:${BARVY[s].text}">${BARVY[s].label}</th>`).join('')}
+    </tr></thead>
+    <tbody>${radkyHTML}</tbody>
+  </table>
+  <div class="btns">
+    <button onclick="window.print()" style="background:#1A1A18;color:#fff">🖨 Tisknout</button>
+    <button onclick="window.close()" style="background:#E8E4DC;color:#4A4840">Zavřít</button>
+  </div>
+</div>
+</body></html>`;
+
+  const blob = new Blob([html], {type:'text/html;charset=utf-8'});
+  const url = URL.createObjectURL(blob);
+  const win = window.open(url,'_blank');
+  if (win) win.focus();
+}
+
+// INIT
+initSekceFilter();
+renderGrid();
+</script>
+
+
+</body></html>
